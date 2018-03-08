@@ -1,0 +1,9 @@
+[package]
+name = "no-std-demo"
+version = "0.2.0"
+authors = ["Caleb Jones <code@calebjones.net>",
+    "Scott J Maddox <scottjmaddox@gmail.com>"]
+
+[dependencies]
+live-reload = { path = ".." }
+no-std-reloadable = { path = "no-std-reloadable" }

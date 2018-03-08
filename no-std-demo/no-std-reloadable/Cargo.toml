@@ -1,0 +1,13 @@
+[package]
+name = "no-std-reloadable"
+version = "0.2.0"
+authors = ["Caleb Jones <code@calebjones.net>",
+    "Scott J Maddox <scottjmaddox@gmail.com>"]
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies.live-reload]
+path = "../.."
+default-features = false
+features = []
