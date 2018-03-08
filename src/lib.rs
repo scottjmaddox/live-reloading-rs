@@ -170,9 +170,19 @@
 //!     (host.print)(&format!("Goodbye! Reached a final value of {}.", state.counter));
 //! }
 //! ```
+//! 
+//! # State Saving and Loading
+//! 
+//! Since live reloading pairs well with state saving and loading, [`Reloadable`][]
+//! provides the [`save_state`][] and [`load_state`][] methods. The [`save_state`][]
+//! method returns a [`SaveState`][] struct, which contains a copy of the state at the
+//! time that [`save_state`][] was called, while the [`load_state`][] method accepts
+//! a reference to a [`SaveState`][] struct, and loads the saved state.
 //!
 //! [`Reloadable`]: struct.Reloadable.html
 //! [`reload`]: struct.Reloadable.html#method.reload
+//! [`save_state`]: struct.Reloadable.html#method.save_state
+//! [`load_state`]: struct.Reloadable.html#method.load_state
 //! [`live_reload!`]: macro.live_reload.html
 
 extern crate notify;
@@ -382,6 +392,22 @@ impl<Host> Reloadable<Host> {
 
     /// Get a mutable reference to the `Host` struct.
     pub fn host_mut(&mut self) -> &mut Host { &mut self.host }
+
+    /// Save a copy of the state
+    pub fn save_state(&self) -> SaveState {
+        SaveState { state: self.state.clone() }
+    }
+
+    /// Load a copy of the state
+    pub fn load_state(&mut self, state: &SaveState) {
+        self.state.clear();
+        self.state.extend_from_slice(state.state.as_slice());
+    }
+}
+
+/// A saved copy of the state
+pub struct SaveState {
+    state: Vec<u64>,
 }
 
 impl<Host> Drop for Reloadable<Host> {
@@ -393,7 +419,6 @@ impl<Host> Drop for Reloadable<Host> {
         }
     }
 }
-
 
 /// Should the main program quit? More self-documenting than a boolean!
 ///
